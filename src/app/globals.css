@@ -1,0 +1,58 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  /* Màu chủ đạo */
+  --color-primary: #ff6600;
+  --color-primary-dark: #e65100;
+  --color-secondary: #0057b8;
+  --color-accent: #ffd600;
+  --color-bg: #f9fafb;
+  --color-card: #fff;
+  --color-border: #e5e7eb;
+  --color-text: #222;
+
+  /* Font */
+  --font-main: 'Inter', 'Roboto', Arial, sans-serif;
+  --font-heading: 'Montserrat', 'Inter', Arial, sans-serif;
+
+  /* Bo góc */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* Shadow */
+  --shadow-xs: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+  --shadow-md: 0 4px 12px 0 rgba(16, 24, 40, 0.10);
+  --shadow-lg: 0 8px 24px 0 rgba(16, 24, 40, 0.15);
+
+  /* Animation */
+  --transition-fast: 0.2s cubic-bezier(0.4,0,0.2,1);
+  --transition-slow: 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+html, body {
+  font-family: var(--font-main);
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+/* Animation toàn cục */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s var(--transition-fast) both;
+}
+.animate-slideIn {
+  animation: slideIn 0.5s var(--transition-fast) both;
+}
