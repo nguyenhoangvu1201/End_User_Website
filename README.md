@@ -29,5 +29,15 @@ Dự án này là hệ thống tư vấn tuyển sinh và định hướng ngàn
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
+## Hướng dẫn tối ưu codebase
+
+- Tách biệt UI và logic (dùng custom hooks, tách function xử lý ra ngoài component).
+- Tái sử dụng component cho các phần UI lặp lại.
+- Sử dụng state management hợp lý (Context, Redux nếu cần).
+- Tối ưu hiệu suất với React.memo, useCallback, useMemo.
+- Đặt tên biến, props, component rõ ràng, nhất quán.
+- Đảm bảo accessibility (aria-label, role, ...).
+- Kiểm tra và refactor code định kỳ.
+
 ---
 © 2025 FPT University - Hệ thống tư vấn tuyển sinh và định hướng ngành học

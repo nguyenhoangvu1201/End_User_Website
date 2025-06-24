@@ -36,6 +36,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
             <button 
               onClick={() => setShowBookingModal(false)}
               className="text-orange-500 hover:text-orange-700 p-2"
+              aria-label="Đóng cửa sổ đặt lịch"
             >
               <X className="w-6 h-6" />
             </button>
@@ -55,6 +56,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                   className="w-full px-4 py-3 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   required
                   placeholder="Nhập họ và tên"
+                  aria-label="Họ và tên"
                 />
               </div>
               <div>
@@ -66,6 +68,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                   className="w-full px-4 py-3 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   required
                   placeholder="Nhập số điện thoại"
+                  aria-label="Số điện thoại"
                 />
               </div>
             </div>
@@ -78,6 +81,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                 className="w-full px-4 py-3 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 required
                 placeholder="Nhập địa chỉ email"
+                aria-label="Email"
               />
             </div>
           </div>
@@ -93,6 +97,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                     ? 'border-orange-500 bg-orange-50'
                     : 'border-orange-200 hover:border-orange-400'
                 }`}
+                aria-label="Chọn hình thức tư vấn trực tuyến"
               >
                 <Video className="w-8 h-8 mx-auto mb-2 text-orange-500" />
                 <div className="font-semibold text-black">Trực tuyến</div>
@@ -106,6 +111,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                     ? 'border-orange-500 bg-orange-50'
                     : 'border-orange-200 hover:border-orange-400'
                 }`}
+                aria-label="Chọn hình thức tư vấn trực tiếp"
               >
                 <MapPin className="w-8 h-8 mx-auto mb-2 text-orange-500" />
                 <div className="font-semibold text-black">Trực tiếp</div>
@@ -124,6 +130,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                 min={new Date().toISOString().split('T')[0]}
                 className="w-full px-4 py-3 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 required
+                aria-label="Chọn ngày"
               />
             </div>
             <div>
@@ -133,6 +140,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                 onChange={(e) => setBookingData({...bookingData, time: e.target.value})}
                 className="w-full px-4 py-3 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 required
+                aria-label="Chọn giờ"
               >
                 <option value="">Chọn khung giờ</option>
                 {timeSlots.map((slot) => (
@@ -147,12 +155,14 @@ const BookingModal: React.FC<BookingModalProps> = ({
               type="button"
               onClick={() => setShowBookingModal(false)}
               className="px-6 py-3 border-2 border-orange-200 rounded-lg text-black font-semibold hover:bg-orange-50 transition-all"
+              aria-label="Hủy đặt lịch"
             >
               Hủy
             </button>
             <button
               type="submit"
               className="px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+              aria-label="Xác nhận đặt lịch"
             >
               Xác nhận đặt lịch
             </button>
@@ -163,4 +173,4 @@ const BookingModal: React.FC<BookingModalProps> = ({
   );
 };
 
-export default BookingModal; 
+export default BookingModal;

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Search, Filter, Award, Users, Calendar, CheckCircle, Star, GraduationCap } from "lucide-react";
 import { useRouter } from 'next/navigation';
+import { Progress } from "@/components/ui/progress";
 
 const Scholarships = () => {
   const router = useRouter();
@@ -335,12 +336,10 @@ const Scholarships = () => {
                     <span>Tiến độ đăng ký</span>
                     <span>{Math.round((scholarship.applied / scholarship.slots) * 100)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-orange-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${Math.min((scholarship.applied / scholarship.slots) * 100, 100)}%` }}
-                    ></div>
-                  </div>
+                  <Progress
+                    value={Math.min((scholarship.applied / scholarship.slots) * 100, 100)}
+                    className="h-2 bg-gray-200"
+                  />
                 </div>
 
                 {/* Actions */}

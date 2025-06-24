@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import BookingModal from '@/components/ui/BookingModal';
+import { cn } from "@/lib/utils";
 
 const Programs = () => {
   const navigate = useRouter();
@@ -182,9 +183,10 @@ const Programs = () => {
           {programCategories.map((category, categoryIndex) => (
             <Card 
               key={categoryIndex} 
-              className={`group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-105 border-0 overflow-hidden ${
-                selectedCategory === categoryIndex ? 'ring-4 ring-orange-300' : ''
-              }`}
+              className={cn(
+                "group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-105 border-0 overflow-hidden",
+                selectedCategory === categoryIndex && "ring-4 ring-orange-300"
+              )}
               onClick={() => handleCategoryClick(categoryIndex)}
             >
               <div className={`h-2 bg-gradient-to-r ${category.gradient}`}></div>

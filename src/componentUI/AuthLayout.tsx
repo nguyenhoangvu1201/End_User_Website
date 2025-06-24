@@ -1,4 +1,5 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -6,7 +7,9 @@ interface AuthLayoutProps {
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[var(--color-bg)] via-white to-[var(--color-secondary)/10] animate-fadeIn font-[var(--font-main)]">
+    <div className={cn(
+      "min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[var(--color-bg)] via-white to-[var(--color-secondary)/10] animate-fadeIn font-[var(--font-main)]"
+    )}>
       <div className="w-full max-w-6xl mx-auto flex items-center justify-center">
         <div className="text-center mb-8 mr-12 hidden lg:block">
           <div className="mb-8">

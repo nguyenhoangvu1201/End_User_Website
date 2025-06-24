@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { X, MapPin, Navigation, ExternalLink, Phone, Clock, Globe } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const About = () => {
   const [visibleCards, setVisibleCards] = useState<number[]>([]);
@@ -24,7 +25,7 @@ const About = () => {
       ],
       address: "Khu công nghệ cao Hòa Lạc, Km29 Đại lộ Thăng Long, xã Thạch Hòa, huyện Thạch Thất, Hà Nội",
       locationDescription: "Thiết kế hình rồng nổi bật, nhiều không gian xanh và được trao giải kiến trúc quốc tế. Đây là campus đầu tiên và lớn nhất của FPT.",
-      mapEmbed: "https://www.google.com/maps?q=FPT+University+H%C3%B2a+L%E1%BA%A1c&output=embed",
+      mapEmbed: "https://www.google.com/maps?q=FPT+University+H%C3%Bòa+L%E1%BA%A1c&output=embed",
       city: "Hà Nội",
       phone: "024 7300 1866",
       website: "hanoi.fpt.edu.vn",
@@ -177,10 +178,11 @@ const About = () => {
         {campuses.map((campus, index) => (
           <Card 
             key={index} 
-            className={`group relative overflow-hidden bg-white/80 backdrop-blur-sm border-0 shadow-xl 
-              hover:shadow-2xl transition-all duration-700 transform hover:scale-[1.02]
-              ${visibleCards.includes(index) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
-              animate-slideIn`}
+            className={cn(
+              "group relative overflow-hidden bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-700 transform hover:scale-[1.02]",
+              visibleCards.includes(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+              "animate-slideIn"
+            )}
             style={{ animationDelay: `${index * 200}ms` }}
             onMouseEnter={() => setHoveredCard(index)}
             onMouseLeave={() => setHoveredCard(null)}

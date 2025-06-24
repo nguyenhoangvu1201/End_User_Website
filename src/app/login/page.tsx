@@ -35,6 +35,7 @@ const Index = () => {
                 <button
                   onClick={() => setIsLogin(false)}
                   className="text-orange-600 hover:text-orange-700 font-medium"
+                  aria-label="Chuyển sang trang đăng ký"
                 >
                   Đăng ký
                 </button>
@@ -45,6 +46,7 @@ const Index = () => {
                 <button
                   onClick={() => setIsLogin(true)}
                   className="text-orange-600 hover:text-orange-700 font-medium"
+                  aria-label="Chuyển sang trang đăng nhập"
                 >
                   Đăng nhập
                 </button>
@@ -112,6 +114,7 @@ const Index = () => {
               <button
                 type="button"
                 className="text-sm text-orange-600 hover:text-orange-700"
+                aria-label="Quên mật khẩu"
               >
                 Quên mật khẩu?
               </button>
@@ -121,6 +124,7 @@ const Index = () => {
           <Button
             type="submit"
             className="w-full h-12 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium rounded-lg transition-all duration-200"
+            aria-label={isLogin ? "Đăng nhập" : "Đăng ký"}
           >
             {isLogin ? "Đăng nhập" : "Đăng ký"}
           </Button>

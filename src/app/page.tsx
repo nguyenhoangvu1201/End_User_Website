@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 
 const Index = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -23,7 +24,9 @@ const Index = () => {
 
   return (
     <AuthLayout>
-      <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+      <div className={cn(
+        "w-full max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 border border-gray-100"
+      )}>
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-orange-600 mb-2">
             {isLogin ? "Đăng nhập" : "Đăng ký"}
@@ -35,6 +38,7 @@ const Index = () => {
                 <button
                   onClick={() => setIsLogin(false)}
                   className="text-orange-600 hover:text-orange-700 font-medium"
+                  aria-label="Chuyển sang trang đăng ký"
                 >
                   Đăng ký
                 </button>
@@ -45,6 +49,7 @@ const Index = () => {
                 <button
                   onClick={() => setIsLogin(true)}
                   className="text-orange-600 hover:text-orange-700 font-medium"
+                  aria-label="Chuyển sang trang đăng nhập"
                 >
                   Đăng nhập
                 </button>
@@ -112,6 +117,7 @@ const Index = () => {
               <button
                 type="button"
                 className="text-sm text-orange-600 hover:text-orange-700"
+                aria-label="Quên mật khẩu"
               >
                 Quên mật khẩu?
               </button>
