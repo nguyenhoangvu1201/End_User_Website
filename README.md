@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# End User Website
 
-## Getting Started
+Dự án này là hệ thống tư vấn tuyển sinh và định hướng ngành học cho FPT University.
 
-First, run the development server:
+## Tính năng chính
+- Khảo sát định hướng ngành học (10 câu hỏi)
+- Lưu và xem lại lịch sử khảo sát
+- Đặt lịch tư vấn trực tuyến hoặc trực tiếp
+- Giao diện hiện đại, responsive, có hiệu ứng và âm thanh thiên nhiên
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Cài đặt & Chạy local
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clone repo:**
+   ```bash
+   git clone https://github.com/nguyenhoangvu1201/End_User_Website.git
+   cd End_User_Website
+   ```
+2. **Cài đặt dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Chạy local:**
+   ```bash
+   npm run dev
+   ```
+4. Truy cập [http://localhost:3000](http://localhost:3000)
 
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+© 2025 FPT University - Hệ thống tư vấn tuyển sinh và định hướng ngành học

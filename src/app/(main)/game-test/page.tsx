@@ -1,505 +1,450 @@
-"use client";
-
-
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowRight } from "lucide-react";
+'use client'
 import { useState } from "react";
+import { ArrowRight, ArrowLeft, Calendar, Video, User, Check, X, Clock, MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
+import BookingModal from '@/components/ui/BookingModal';
 
 const GameTest = () => {
-  const navigate = useRouter();
-  const [currentQuestion, setCurrentQuestion] = useState(1);
-  const totalQuestions = 10;
-  const progress = (currentQuestion / totalQuestions) * 100;
+const [currentQuestion, setCurrentQuestion] = useState(1);
+const totalQuestions = 10;
+const progress = (currentQuestion / totalQuestions) * 100;
 
-  // Booking modal state
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [bookingData, setBookingData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    type: 'online',
-    date: '',
-    time: ''
-  });
-  const timeSlots = [
-    '09:00 - 10:00',
-    '10:00 - 11:00',
-    '11:00 - 12:00',
-    '14:00 - 15:00',
-    '15:00 - 16:00',
-    '16:00 - 17:00',
-  ];
+// Booking modal state
+const [showBookingModal, setShowBookingModal] = useState(false);
+const [showSuccessModal, setShowSuccessModal] = useState(false);
+const defaultBookingData = {
+  fullName: '',
+  email: '',
+  phone: '',
+  type: 'online',
+  date: '',
+  time: ''
+};
+const [bookingData, setBookingData] = useState(defaultBookingData);
 
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<(string | null)[]>(Array(totalQuestions).fill(null));
-  const [showFinishModal, setShowFinishModal] = useState(false);
+const timeSlots = [
+  '09:00 - 10:00',
+  '10:00 - 11:00', 
+  '11:00 - 12:00',
+  '14:00 - 15:00',
+  '15:00 - 16:00',
+  '16:00 - 17:00',
+];
 
-  const questions = [
-    {
-      id: 1,
-      type: 'multiple-choice',
-      question: 'Bạn thích làm việc trong môi trường nào nhất?',
-      options: [
-        'Làm việc độc lập, tự do sáng tạo',
-        'Làm việc nhóm, hợp tác với nhiều người',
-        'Làm việc có cấu trúc rõ ràng, quy trình chặt chẽ',
-        'Làm việc linh hoạt, thay đổi thường xuyên'
-      ]
-    },
-    {
-      id: 2,
-      type: 'multiple-choice',
-      question: 'Bạn thích hoạt động nào nhất trong thời gian rảnh?',
-      options: [
-        'Đọc sách, nghiên cứu',
-        'Tham gia các hoạt động xã hội',
-        'Chơi game, giải trí',
-        'Vẽ, thiết kế, sáng tạo nghệ thuật'
-      ]
-    },
-    {
-      id: 3,
-      type: 'multiple-choice',
-      question: 'Bạn tự đánh giá khả năng giao tiếp của mình như thế nào?',
-      options: [
-        'Tốt, tự tin giao tiếp',
-        'Bình thường',
-        'Chỉ giao tiếp khi cần thiết',
-        'Thích làm việc một mình hơn'
-      ]
-    },
-    {
-      id: 4,
-      type: 'multiple-choice',
-      question: 'Bạn thích môn học nào nhất ở trường?',
-      options: [
-        'Toán, Tin học',
-        'Văn, Ngoại ngữ',
-        'Khoa học xã hội',
-        'Mỹ thuật, Âm nhạc'
-      ]
-    },
-    {
-      id: 5,
-      type: 'multiple-choice',
-      question: 'Bạn mong muốn công việc tương lai như thế nào?',
-      options: [
-        'Ổn định, lâu dài',
-        'Năng động, nhiều thử thách',
-        'Có cơ hội sáng tạo',
-        'Được làm việc với nhiều người'
-      ]
-    },
-    {
-      id: 6,
-      type: 'multiple-choice',
-      question: 'Bạn thích sử dụng công nghệ vào việc gì nhất?',
-      options: [
-        'Lập trình, phát triển phần mềm',
-        'Kinh doanh online',
-        'Học tập, nghiên cứu',
-        'Thiết kế, chỉnh sửa hình ảnh/video'
-      ]
-    },
-    {
-      id: 7,
-      type: 'multiple-choice',
-      question: 'Bạn thường giải quyết vấn đề như thế nào?',
-      options: [
-        'Phân tích kỹ lưỡng trước khi quyết định',
-        'Tham khảo ý kiến người khác',
-        'Làm theo cảm tính',
-        'Tìm kiếm giải pháp sáng tạo'
-      ]
-    },
-    {
-      id: 8,
-      type: 'multiple-choice',
-      question: 'Bạn thích tham gia hoạt động nào nhất?',
-      options: [
-        'Câu lạc bộ học thuật',
-        'Tình nguyện, hoạt động xã hội',
-        'Thể thao',
-        'Nghệ thuật, sáng tạo'
-      ]
-    },
-    {
-      id: 9,
-      type: 'multiple-choice',
-      question: 'Bạn đánh giá cao điều gì ở một người lãnh đạo?',
-      options: [
-        'Khả năng ra quyết định',
-        'Khả năng truyền cảm hứng',
-        'Khả năng tổ chức',
-        'Khả năng sáng tạo'
-      ]
-    },
-    {
-      id: 10,
-      type: 'multiple-choice',
-      question: 'Bạn muốn học tập và làm việc ở môi trường như thế nào?',
-      options: [
-        'Chuyên nghiệp, hiện đại',
-        'Thân thiện, hòa đồng',
-        'Tự do, sáng tạo',
-        'Năng động, đổi mới'
-      ]
-    }
-  ];
+const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+const [error, setError] = useState<string | null>(null);
+const [answers, setAnswers] = useState(Array(totalQuestions).fill(null));
+const [showFinishModal, setShowFinishModal] = useState(false);
 
-  const handleNext = () => {
-    if (!selectedAnswer) {
-      setError('Vui lòng chọn một đáp án trước khi tiếp tục.');
-      return;
-    }
-    setError(null);
-    const updatedAnswers = [...answers];
-    updatedAnswers[currentQuestion - 1] = selectedAnswer;
-    setAnswers(updatedAnswers);
-    if (currentQuestion < totalQuestions) {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(answers[currentQuestion] || null);
-    } else {
-      // Lưu kết quả vào localStorage
+const router = useRouter();
+
+const questions = [
+  {
+    id: 1,
+    type: 'multiple-choice',
+    question: 'Bạn thích làm việc trong môi trường nào nhất?',
+    options: [
+      'Làm việc độc lập, tự do sáng tạo',
+      'Làm việc nhóm, hợp tác với nhiều người',
+      'Làm việc có cấu trúc rõ ràng, quy trình chặt chẽ',
+      'Làm việc linh hoạt, thay đổi thường xuyên'
+    ]
+  },
+  {
+    id: 2,
+    type: 'multiple-choice',
+    question: 'Bạn thích hoạt động nào nhất trong thời gian rảnh?',
+    options: [
+      'Đọc sách, nghiên cứu',
+      'Tham gia các hoạt động xã hội',
+      'Chơi game, giải trí',
+      'Vẽ, thiết kế, sáng tạo nghệ thuật'
+    ]
+  },
+  {
+    id: 3,
+    type: 'multiple-choice',
+    question: 'Bạn tự đánh giá khả năng giao tiếp của mình như thế nào?',
+    options: [
+      'Tốt, tự tin giao tiếp',
+      'Bình thường',
+      'Chỉ giao tiếp khi cần thiết',
+      'Thích làm việc một mình hơn'
+    ]
+  },
+  {
+    id: 4,
+    type: 'multiple-choice',
+    question: 'Bạn thích môn học nào nhất ở trường?',
+    options: [
+      'Toán, Tin học',
+      'Văn, Ngoại ngữ',
+      'Khoa học xã hội',
+      'Mỹ thuật, Âm nhạc'
+    ]
+  },
+  {
+    id: 5,
+    type: 'multiple-choice',
+    question: 'Bạn mong muốn công việc tương lai như thế nào?',
+    options: [
+      'Ổn định, lâu dài',
+      'Năng động, nhiều thử thách',
+      'Có cơ hội sáng tạo',
+      'Được làm việc với nhiều người'
+    ]
+  },
+  {
+    id: 6,
+    type: 'multiple-choice',
+    question: 'Bạn thích sử dụng công nghệ vào việc gì nhất?',
+    options: [
+      'Lập trình, phát triển phần mềm',
+      'Kinh doanh online',
+      'Học tập, nghiên cứu',
+      'Thiết kế, chỉnh sửa hình ảnh/video'
+    ]
+  },
+  {
+    id: 7,
+    type: 'multiple-choice',
+    question: 'Bạn thường giải quyết vấn đề như thế nào?',
+    options: [
+      'Phân tích kỹ lưỡng trước khi quyết định',
+      'Tham khảo ý kiến người khác',
+      'Làm theo cảm tính',
+      'Tìm kiếm giải pháp sáng tạo'
+    ]
+  },
+  {
+    id: 8,
+    type: 'multiple-choice',
+    question: 'Bạn thích tham gia hoạt động nào nhất?',
+    options: [
+      'Câu lạc bộ học thuật',
+      'Tình nguyện, hoạt động xã hội',
+      'Thể thao',
+      'Nghệ thuật, sáng tạo'
+    ]
+  },
+  {
+    id: 9,
+    type: 'multiple-choice',
+    question: 'Bạn đánh giá cao điều gì ở một người lãnh đạo?',
+    options: [
+      'Khả năng ra quyết định',
+      'Khả năng truyền cảm hứng',
+      'Khả năng tổ chức',
+      'Khả năng sáng tạo'
+    ]
+  },
+  {
+    id: 10,
+    type: 'multiple-choice',
+    question: 'Bạn muốn học tập và làm việc ở môi trường như thế nào?',
+    options: [
+      'Chuyên nghiệp, hiện đại',
+      'Thân thiện, hòa đồng',
+      'Tự do, sáng tạo',
+      'Năng động, đổi mới'
+    ]
+  }
+];
+
+const handleNext = () => {
+  if (!selectedAnswer) {
+    setError('Vui lòng chọn một đáp án trước khi tiếp tục.');
+    return;
+  }
+  setError(null);
+  const updatedAnswers = [...answers];
+  updatedAnswers[currentQuestion - 1] = selectedAnswer;
+  setAnswers(updatedAnswers);
+  
+  if (currentQuestion < totalQuestions) {
+    setCurrentQuestion(currentQuestion + 1);
+    setSelectedAnswer(answers[currentQuestion] || null);
+  } else {
+    // Lưu đáp án vào localStorage khi hoàn thành quiz
+    if (typeof window !== 'undefined') {
       localStorage.setItem('gameTestAnswers', JSON.stringify(updatedAnswers));
-      setShowFinishModal(true);
     }
-  };
+    setShowFinishModal(true);
+  }
+};
 
-  const restartQuiz = () => {
-    setCurrentQuestion(1);
-    setSelectedAnswer(null);
-    // Reset other quiz state if needed
-  };
+const handlePrevious = () => {
+  if (currentQuestion > 1) {
+    setCurrentQuestion(currentQuestion - 1);
+    setSelectedAnswer(answers[currentQuestion - 2] || null);
+    setError(null);
+  }
+};
 
-  const handleBookingSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShowBookingModal(false);
-    setShowSuccessModal(true);
-    // Here you can add API call to submit bookingData
-  };
+const handleBookingSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  setShowBookingModal(false);
+  setShowSuccessModal(true);
+  // Here you would add API call to submit bookingData
+  console.log('Booking submitted:', bookingData);
+  setBookingData(defaultBookingData);
+};
 
-  return (
-    <div className="min-h-screen flex flex-col bg-[#FFF7F0]">
-      <div className="p-6 max-w-7xl mx-auto w-full">
-        {/* Header */}
-        <div className="mb-8 flex items-center gap-3">
-          <div className="bg-orange-500 rounded-xl p-2 flex items-center justify-center">
-            <i className="fas fa-university text-white text-2xl"></i>
+const jumpToQuestion = (questionNumber: number) => {
+  setCurrentQuestion(questionNumber);
+  setSelectedAnswer(answers[questionNumber - 1] || null);
+  setError(null);
+};
+
+return (
+  <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50">
+    {/* Header */}
+    <header className="bg-white shadow-sm border-b border-orange-200">
+      <div className="max-w-6xl mx-auto px-6 py-4">
+        <div className="flex items-center gap-4">
+          <div className="bg-orange-500 rounded-xl p-3">
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+              <span className="text-orange-500 font-bold text-lg">F</span>
+            </div>
           </div>
-          <h1 className="text-3xl font-bold text-orange-600">FPT University Career Assessment</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-orange-600">FPT University Career Assessment</h1>
+            <p className="text-gray-700 text-sm">Khám phá con đường sự nghiệp phù hợp với bạn</p>
+          </div>
         </div>
+      </div>
+    </header>
 
-        <div className="flex gap-6">
-          {/* Main Content Area */}
-          <div className="flex-1">
-            <div className="bg-white rounded-2xl p-8 shadow-md">
-              {/* Progress Section */}
-              <div className="mb-8 flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-800 mb-1">{questions[currentQuestion-1].question}</h2>
-                </div>
-                <div className="flex items-center gap-2">
-                  <i className="fas fa-question-circle text-blue-500"></i>
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm font-semibold">Câu hỏi: {currentQuestion}/{totalQuestions}</span>
-                </div>
+    <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="flex gap-8">
+        {/* Main Content */}
+        <div className="flex-1">
+          {/* Progress Card */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-orange-400">
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-orange-600">Tiến độ bài kiểm tra</h2>
+                <p className="text-gray-700 text-sm">Câu hỏi {currentQuestion} / {totalQuestions}</p>
               </div>
-              <Progress value={(currentQuestion / totalQuestions) * 100} className="h-2 mb-6" />
-
-              {/* Question Section */}
-              <div className="bg-blue-50 rounded-lg p-6 mb-6">
-                <div className="mb-6">
-                  <span className="text-lg font-semibold text-gray-800">{questions[currentQuestion-1].question}</span>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {questions[currentQuestion-1].options.map((option, idx) => {
-                    const isSelected = selectedAnswer === option;
-                    return (
-                      <label
-                        key={option}
-                        className={`flex items-center gap-3 border rounded-lg px-4 py-3 cursor-pointer transition-all ${
-                          isSelected
-                            ? 'border-purple-500 bg-purple-50'
-                            : 'border-gray-200 bg-white hover:border-blue-300'
-                        }`}
-                        onClick={() => setSelectedAnswer(option)}
-                      >
-                        <span className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-lg ${
-                          isSelected ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-600'
-                        }`}>
-                          {String.fromCharCode(65 + idx)}
-                        </span>
-                        <span className="text-gray-800 font-medium">{option}</span>
-                        <input
-                          type="radio"
-                          name="answer"
-                          value={option}
-                          checked={isSelected}
-                          onChange={() => setSelectedAnswer(option)}
-                          className="hidden"
-                        />
-                      </label>
-                    );
-                  })}
-                </div>
-                {error && <div className="mt-4 text-sm text-red-500">{error}</div>}
-              </div>
-
-              {/* Next & Back Buttons */}
-              <div className="flex justify-between items-center">
-                <Button
-                  onClick={() => {
-                    if (currentQuestion > 1) {
-                      setCurrentQuestion(currentQuestion - 1);
-                      setSelectedAnswer(answers[currentQuestion - 2] || null);
-                      setError(null);
-                    }
-                  }}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg"
-                  disabled={currentQuestion === 1}
-                >
-                  <ArrowRight className="mr-2 h-4 w-4 rotate-180" /> Quay lại
-                </Button>
-                <Button 
-                  onClick={handleNext}
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg"
-                >
-                  {currentQuestion === totalQuestions ? 'Hoàn thành' : 'Câu tiếp theo'} <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-              {/* Nút đặt lịch tư vấn */}
-              <div className="flex justify-center mt-8">
-                <Button
-                  id="bookConsultationBtn"
-                  onClick={() => setShowBookingModal(true)}
-                  className="px-6 py-3 rounded-lg bg-purple-600 text-white font-bold shadow-lg hover:bg-purple-700 transition-all !rounded-button whitespace-nowrap cursor-pointer"
-                >
-                  <i className="fas fa-calendar-alt mr-2"></i>
-                  Đặt lịch tư vấn
-                </Button>
+              <div className="bg-orange-100 px-4 py-2 rounded-full">
+                <span className="text-orange-600 font-semibold">{Math.round(progress)}%</span>
               </div>
             </div>
+            <div className="w-full bg-orange-100 rounded-full h-3">
+              <div 
+                className="bg-orange-500 h-3 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+          </div>
 
-            {/* Modal hoàn thành khảo sát */}
-            {showFinishModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate__animated animate__fadeIn">
-                <div className="bg-white rounded-2xl p-8 w-full max-w-md text-center">
-                  <div className="mb-6">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <i className="fas fa-check text-3xl text-green-500"></i>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">Chúc mừng bạn đã hoàn thành phần khảo sát!</h3>
-                    <p className="text-gray-600">
-                      Kết quả của bạn đã được lưu lại. Nhấn xác nhận để xem kết quả.
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => navigate.push('/game-test/history')}
-                    className="px-6 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition-all !rounded-button whitespace-nowrap"
-                  >
-                    Xác nhận
-                  </button>
+          {/* Question Card */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 border border-orange-400">
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-orange-500 text-white rounded-lg px-3 py-1 text-sm font-semibold">
+                  Câu {currentQuestion}
                 </div>
               </div>
-            )}
+              <h3 className="text-xl font-semibold text-black leading-relaxed">
+                {questions[currentQuestion-1].question}
+              </h3>
+            </div>
 
-            {/* Booking Modal */}
-            {showBookingModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate__animated animate__fadeIn">
-                <div className="bg-white rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-2xl font-bold text-gray-800">Đặt lịch tư vấn</h3>
-                    <button 
-                      onClick={() => setShowBookingModal(false)}
-                      className="text-gray-500 hover:text-gray-700"
-                    >
-                      <i className="fas fa-times text-xl"></i>
-                    </button>
-                  </div>
-                  <form onSubmit={handleBookingSubmit} className="space-y-6">
-                    {/* Contact Information */}
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2">Họ và tên</label>
-                        <input
-                          type="text"
-                          id="fullName"
-                          value={bookingData.fullName}
-                          onChange={(e) => setBookingData({...bookingData, fullName: e.target.value})}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2">Email</label>
-                        <input
-                          type="email"
-                          id="email"
-                          value={bookingData.email}
-                          onChange={(e) => setBookingData({...bookingData, email: e.target.value})}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2">Số điện thoại</label>
-                        <input
-                          type="tel"
-                          id="phone"
-                          value={bookingData.phone}
-                          onChange={(e) => setBookingData({...bookingData, phone: e.target.value})}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                          required
-                        />
-                      </div>
-                    </div>
-                    {/* Consultation Type */}
-                    <div>
-                      <label className="block text-gray-700 font-medium mb-2">Hình thức tư vấn</label>
-                      <div className="flex gap-4">
-                        <button
-                          type="button"
-                          onClick={() => setBookingData({...bookingData, type: 'online'})}
-                          className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all !rounded-button whitespace-nowrap ${
-                            bookingData.type === 'online'
-                              ? 'border-purple-500 bg-purple-50 text-purple-700'
-                              : 'border-gray-300 text-gray-600 hover:border-purple-300'
-                          }`}
-                        >
-                          <i className="fas fa-video mr-2"></i>
-                          Trực tuyến
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setBookingData({...bookingData, type: 'offline'})}
-                          className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all !rounded-button whitespace-nowrap ${
-                            bookingData.type === 'offline'
-                              ? 'border-purple-500 bg-purple-50 text-purple-700'
-                              : 'border-gray-300 text-gray-600 hover:border-purple-300'
-                          }`}
-                        >
-                          <i className="fas fa-user mr-2"></i>
-                          Trực tiếp
-                        </button>
-                      </div>
-                    </div>
-                    {/* Date Selection */}
-                    <div>
-                      <label className="block text-gray-700 font-medium mb-2">Chọn ngày</label>
-                      <div className="relative">
-                        <input
-                          type="date"
-                          id="consultationDate"
-                          value={bookingData.date}
-                          onChange={(e) => setBookingData({...bookingData, date: e.target.value})}
-                          min={new Date().toISOString().split('T')[0]}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                          required
-                        />
-                      </div>
-                    </div>
-                    {/* Time Slot Selection */}
-                    <div>
-                      <label className="block text-gray-700 font-medium mb-2">Chọn giờ</label>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {timeSlots.map((slot) => (
-                          <button
-                            key={slot}
-                            type="button"
-                            onClick={() => setBookingData({...bookingData, time: slot})}
-                            className={`py-2 px-4 rounded-lg border-2 transition-all text-sm !rounded-button whitespace-nowrap ${
-                              bookingData.time === slot
-                                ? 'border-purple-500 bg-purple-50 text-purple-700'
-                                : 'border-gray-300 text-gray-600 hover:border-purple-300'
-                            }`}
-                          >
-                            {slot}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    {/* Submit Button */}
-                    <div className="flex justify-end gap-4">
-                      <button
-                        type="button"
-                        onClick={() => setShowBookingModal(false)}
-                        className="px-6 py-3 border-2 border-gray-300 rounded-lg text-gray-600 font-bold hover:bg-gray-50 transition-all !rounded-button whitespace-nowrap"
-                      >
-                        Hủy
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-6 py-3 bg-purple-600 text-white rounded-lg font-bold hover:bg-purple-700 transition-all !rounded-button whitespace-nowrap"
-                      >
-                        Xác nhận đặt lịch
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
-
-            {/* Success Modal */}
-            {showSuccessModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate__animated animate__fadeIn">
-                <div className="bg-white rounded-2xl p-8 w-full max-w-md text-center">
-                  <div className="mb-6">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <i className="fas fa-check text-3xl text-green-500"></i>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">Đặt lịch thành công!</h3>
-                    <p className="text-gray-600">
-                      Chúng tôi sẽ liên hệ với bạn qua email để xác nhận lịch tư vấn.
-                    </p>
-                  </div>
+            <div className="space-y-3">
+              {questions[currentQuestion-1].options.map((option, idx) => {
+                const isSelected = selectedAnswer === option;
+                const letter = String.fromCharCode(65 + idx);
+                
+                return (
                   <button
-                    onClick={() => setShowSuccessModal(false)}
-                    className="px-6 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition-all !rounded-button whitespace-nowrap"
+                    key={option}
+                    onClick={() => setSelectedAnswer(option)}
+                    className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
+                      isSelected
+                        ? 'border-orange-500 bg-orange-50 shadow-md'
+                        : 'border-gray-200 bg-white hover:border-orange-300'
+                    }`}
                   >
-                    Đóng
+                    <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-lg ${
+                      isSelected 
+                        ? 'bg-orange-500 text-white' 
+                        : 'bg-gray-200 text-black'
+                    }`}>
+                      {letter}
+                    </div>
+                    <span className="text-left text-black font-medium flex-1">
+                      {option}
+                    </span>
                   </button>
-                </div>
+                );
+              })}
+            </div>
+
+            {error && (
+              <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                <p className="text-orange-600 text-sm">{error}</p>
               </div>
             )}
           </div>
-          {/* Right Sidebar: Danh sách số thứ tự câu hỏi */}
-          <div className="w-32 flex flex-col items-center">
-            <div className="bg-white rounded-lg p-4 shadow-sm border w-full">
-              <h3 className="font-semibold mb-4 text-center">Câu hỏi</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {questions.map((q, idx) => (
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between items-center mb-8">
+            <button
+              onClick={handlePrevious}
+              disabled={currentQuestion === 1}
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
+                currentQuestion === 1
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-white text-black border-2 border-orange-400 hover:border-orange-500 hover:shadow-md'
+              }`}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Quay lại
+            </button>
+
+            <button
+              onClick={handleNext}
+              className="flex items-center gap-2 px-8 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:shadow-lg transition-all transform hover:scale-105"
+            >
+              {currentQuestion === totalQuestions ? 'Hoàn thành' : 'Câu tiếp theo'}
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Consultation Booking Button */}
+          <div className="bg-orange-500 rounded-2xl p-1">
+            <div className="bg-white rounded-xl p-6 text-center">
+              <h3 className="text-lg font-semibold text-black mb-2">Cần hỗ trợ tư vấn?</h3>
+              <p className="text-gray-700 mb-4">Đặt lịch tư vấn miễn phí với chuyên gia của chúng tôi</p>
+              <button
+                onClick={() => setShowBookingModal(true)}
+                className="bg-orange-500 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all transform hover:scale-105"
+              >
+                <Calendar className="w-4 h-4 inline mr-2" />
+                Đặt lịch tư vấn
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Question Navigation Sidebar */}
+        <div className="w-64">
+          <div className="bg-white rounded-2xl shadow-lg p-6 border border-orange-200 sticky top-8">
+            <h3 className="font-semibold text-black mb-4 text-center">Danh sách câu hỏi</h3>
+            <div className="grid grid-cols-5 gap-2">
+              {questions.map((q, idx) => {
+                const questionNumber = idx + 1;
+                const isAnswered = answers[idx] !== null;
+                const isCurrent = currentQuestion === questionNumber;
+                
+                return (
                   <button
                     key={q.id}
-                    onClick={() => {
-                      setCurrentQuestion(idx + 1);
-                      setSelectedAnswer(answers[idx] || null);
-                      setError(null);
-                    }}
-                    className={`w-12 h-12 rounded flex items-center justify-center text-base font-bold border transition-all
-                      ${currentQuestion === idx + 1 ? 'bg-purple-600 text-white border-purple-600' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-purple-100'}
-                    `}
+                    onClick={() => jumpToQuestion(questionNumber)}
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold transition-all ${
+                      isCurrent
+                        ? 'bg-orange-500 text-white shadow-lg'
+                        : isAnswered
+                        ? 'bg-black text-white border border-black'
+                        : 'bg-gray-100 text-gray-600 hover:bg-orange-100 border border-gray-300'
+                    }`}
                   >
-                    {idx + 1}
+                    {questionNumber}
                   </button>
-                ))}
+                );
+              })}
+            </div>
+            <div className="mt-6 space-y-2 text-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-orange-500 rounded"></div>
+                <span className="text-black">Câu hiện tại</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-black border border-black rounded"></div>
+                <span className="text-black">Đã trả lời</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-gray-100 border border-gray-300 rounded"></div>
+                <span className="text-black">Chưa trả lời</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {/* Footer */}
-      <footer className="w-full text-center p-4 text-gray-600 mt-auto">
-        <p>© 2025 FPT University - Hệ thống tư vấn tuyển sinh và định hướng ngành học</p>
-      </footer>
     </div>
-  );
+
+    {/* Completion Modal */}
+    {showFinishModal && (
+      <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl p-8 w-full max-w-md text-center animate-pulse border-2 border-orange-400">
+          <div className="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Check className="w-10 h-10 text-white" />
+          </div>
+          <h3 className="text-2xl font-bold text-orange-600 mb-4">Chúc mừng!</h3>
+          <p className="text-gray-700 mb-6">
+            Bạn đã hoàn thành bài kiểm tra định hướng nghề nghiệp. 
+            Kết quả của bạn đã được lưu lại.
+          </p>
+          <button
+            onClick={() => {
+              setShowFinishModal(false);
+              router.push('/game-test/history');
+            }}
+            className="bg-orange-500 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
+          >
+            Xem kết quả
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* Booking Modal */}
+    {showBookingModal && (
+      <BookingModal
+        bookingData={bookingData}
+        setBookingData={setBookingData}
+        setShowBookingModal={(show: boolean) => {
+          setShowBookingModal(show);
+          if (!show) setBookingData(defaultBookingData);
+        }}
+        setShowSuccessModal={setShowSuccessModal}
+        timeSlots={timeSlots}
+        onSubmit={handleBookingSubmit}
+      />
+    )}
+
+    {/* Success Modal */}
+    {showSuccessModal && (
+      <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl p-8 w-full max-w-md text-center border-2 border-orange-400">
+          <div className="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Check className="w-10 h-10 text-white" />
+          </div>
+          <h3 className="text-2xl font-bold text-orange-600 mb-4">Đặt lịch thành công!</h3>
+          <p className="text-gray-700 mb-6">
+            Chúng tôi sẽ liên hệ với bạn qua email và điện thoại để xác nhận lịch tư vấn trong thời gian sớm nhất.
+          </p>
+          <button
+            onClick={() => setShowSuccessModal(false)}
+            className="bg-orange-500 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
+          >
+            Đóng
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* Footer */}
+    <footer className="bg-white border-t border-orange-200 mt-16">
+      <div className="max-w-6xl mx-auto px-6 py-8 text-center">
+        <p className="text-black">
+          © 2025 FPT University - Hệ thống tư vấn tuyển sinh và định hướng ngành học
+        </p>
+      </div>
+    </footer>
+  </div>
+);
 };
 
 export default GameTest;

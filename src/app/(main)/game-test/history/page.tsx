@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
+import { ArrowLeft, Check } from "lucide-react";
 
 const questions = [
   {
@@ -132,36 +133,49 @@ const GameTestHistory = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FFF7F0]">
-      <div className="p-6 max-w-7xl mx-auto w-full">
-        <div className="mb-8 flex items-center gap-3">
-          <div className="bg-orange-500 rounded-xl p-2 flex items-center justify-center">
-            <i className="fas fa-university text-white text-2xl"></i>
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-orange-200">
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="flex items-center gap-4">
+            <div className="bg-orange-500 rounded-xl p-3">
+              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                <span className="text-orange-500 font-bold text-lg">F</span>
+              </div>
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-orange-600">FPT University Career Assessment</h1>
+              <p className="text-gray-700 text-sm">Kết quả khảo sát định hướng nghề nghiệp</p>
+            </div>
           </div>
-          <h1 className="text-3xl font-bold text-orange-600">Kết quả khảo sát</h1>
         </div>
-        <div className="flex gap-6">
+      </header>
+
+      <div className="max-w-6xl mx-auto px-6 py-8 flex-1 w-full">
+        <div className="flex gap-8">
           {/* Main Content */}
           <div className="flex-1">
-            <div className="bg-white rounded-2xl p-8 shadow-md">
+            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 border border-orange-400">
               <div className="mb-8 flex justify-between items-center">
-                <h2 className="text-xl font-bold text-gray-800 mb-1">Tổng quan kết quả khảo sát</h2>
-                <Button onClick={handleRestart} className="bg-purple-600 text-white font-bold hover:bg-purple-700 transition-all !rounded-button whitespace-nowrap cursor-pointer">
-                  <i className="fas fa-redo mr-2"></i>
+                <h2 className="text-xl font-bold text-orange-600 mb-1">Tổng quan kết quả khảo sát</h2>
+                <Button onClick={handleRestart} className="bg-orange-500 text-white font-bold hover:bg-orange-600 transition-all rounded-xl px-6 py-2 flex items-center gap-2">
+                  <ArrowLeft className="w-4 h-4" />
                   Làm lại khảo sát
                 </Button>
               </div>
-              <Progress value={100} className="h-2 mb-6" />
+              <div className="mb-6">
+                <Progress value={100} className="h-3 bg-orange-100" />
+              </div>
               <div className="space-y-6">
                 {questions.map((q, idx) => (
                   <div
                     key={q.id}
                     ref={el => { questionRefs.current[idx] = el; }}
-                    className="bg-blue-50 rounded-lg p-6"
+                    className="bg-orange-50 rounded-xl p-6 border border-orange-200"
                   >
                     <div className="mb-2 flex items-center gap-2">
-                      <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">Câu {q.id}</span>
-                      <span className="text-gray-700 font-semibold">{q.question}</span>
+                      <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">Câu {q.id}</span>
+                      <span className="text-black font-semibold">{q.question}</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                       {q.options.map((option, oidx) => {
@@ -169,19 +183,19 @@ const GameTestHistory = () => {
                         return (
                           <div
                             key={option}
-                            className={`flex items-center gap-3 border rounded-lg px-4 py-3 ${
+                            className={`flex items-center gap-3 border-2 rounded-lg px-4 py-3 transition-all ${
                               isSelected
-                                ? 'border-purple-500 bg-purple-50'
+                                ? 'border-orange-500 bg-white shadow-md'
                                 : 'border-gray-200 bg-white'
                             }`}
                           >
                             <span className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-lg ${
-                              isSelected ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-600'
+                              isSelected ? 'bg-orange-500 text-white' : 'bg-gray-200 text-black'
                             }`}>
                               {String.fromCharCode(65 + oidx)}
                             </span>
-                            <span className="text-gray-800 font-medium">{option}</span>
-                            {isSelected && <span className="ml-2 text-green-600 font-semibold">(Đáp án đã chọn)</span>}
+                            <span className="text-black font-medium">{option}</span>
+                            {isSelected && <Check className="ml-2 w-5 h-5 text-orange-600" />}
                           </div>
                         );
                       })}
@@ -192,28 +206,51 @@ const GameTestHistory = () => {
             </div>
           </div>
           {/* Sidebar: Danh sách số thứ tự câu hỏi */}
-          <div className="w-32 flex flex-col items-center">
-            <div className="bg-white rounded-lg p-4 shadow-sm border w-full">
-              <h3 className="font-semibold mb-4 text-center">Câu hỏi</h3>
-              <div className="grid grid-cols-2 gap-2">
+          <div className="w-64">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-orange-200 sticky top-8">
+              <h3 className="font-semibold text-black mb-4 text-center">Danh sách câu hỏi</h3>
+              <div className="grid grid-cols-5 gap-2">
                 {questions.map((q, idx) => (
                   <button
                     key={q.id}
                     onClick={() => handleScrollTo(idx)}
-                    className={`w-12 h-12 rounded flex items-center justify-center text-base font-bold border transition-all
-                      ${activeQuestion === idx + 1 ? 'bg-purple-600 text-white border-purple-600' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-purple-100'}
-                    `}
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold transition-all ${
+                      activeQuestion === idx + 1
+                        ? 'bg-orange-500 text-white shadow-lg'
+                        : answers[idx]
+                        ? 'bg-black text-white border border-black'
+                        : 'bg-gray-100 text-gray-600 hover:bg-orange-100 border border-gray-300'
+                    }`}
                   >
                     {idx + 1}
                   </button>
                 ))}
               </div>
+              <div className="mt-6 space-y-2 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-orange-500 rounded"></div>
+                  <span className="text-black">Câu hiện tại</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-black border border-black rounded"></div>
+                  <span className="text-black">Đã trả lời</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-gray-100 border border-gray-300 rounded"></div>
+                  <span className="text-black">Chưa trả lời</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <footer className="w-full text-center p-4 text-gray-600 mt-auto">
-        <p>© 2025 FPT University - Hệ thống tư vấn tuyển sinh và định hướng ngành học</p>
+      {/* Footer */}
+      <footer className="bg-white border-t border-orange-200 mt-16">
+        <div className="max-w-6xl mx-auto px-6 py-8 text-center">
+          <p className="text-black">
+            © 2025 FPT University - Hệ thống tư vấn tuyển sinh và định hướng ngành học
+          </p>
+        </div>
       </footer>
     </div>
   );
